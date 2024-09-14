@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <spdlog/spdlog.h>
 #include "kitok/kitok.hpp"
 
 
@@ -15,7 +16,12 @@ int main(int argc, char** argv) {
     }
 
     const auto folder = std::filesystem::path(argv[1]);
+    if(const auto maybeVocab = kitok::kitok_vocabulary_from_tokenizers(folder); maybeVocab.has_value()){
+        const auto vocab = *maybeVocab;
+        SPDLOG_INFO("Successfully read vocabulary content {}", vocab.size());
+    } else {
+        SPDLOG_ERROR("Failed to read vocabulary content: {}", maybeVocab.error());
+    }
 
-    auto vocab = kitok::kitok_vocabulary_from_tokenizers(folder);
     return 0;
 }

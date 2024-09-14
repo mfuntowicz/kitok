@@ -26,7 +26,7 @@
 namespace kitok {
 
     using kitok_string_t = std::string;
-    using kitok_token_id_t = size_t;
+    using kitok_token_id_t = uint32_t;
 
     class kitok_token_flags_t {
     private:
@@ -56,14 +56,19 @@ namespace kitok {
 
     class kitok_vocabulary_t {
     private:
-        std::vector<kitok_string_t> tokens;
+        std::vector<std::pair<kitok_string_t, kitok_token_id_t>> tokens;
         std::vector<kitok_token_flags_t> flags;
 
     public:
         kitok_vocabulary_t() = default;
-        explicit kitok_vocabulary_t(std::vector<kitok_string_t>&& tokens, std::vector<kitok_token_flags_t> &&flags):
+        explicit kitok_vocabulary_t(std::vector<std::pair<kitok_string_t, kitok_token_id_t>>&& tokens, std::vector<kitok_token_flags_t> &&flags):
             tokens(tokens), flags(flags) {}
 
+        /**
+         * Number of tokens present in this vocabulary
+         * @return
+         */
+        [[nodiscard]] size_t size() const { return tokens.size(); }
         std::optional<kitok_token_id_t> operator[](std::string_view token) const;
     };
 }

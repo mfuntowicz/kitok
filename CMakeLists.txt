@@ -9,6 +9,7 @@ endif()
 # Includes modules
 include(FetchContent)
 include(cmake/json.cmake)
+include(cmake/spdlog.cmake)
 
 # Some properties
 set(CMAKE_CXX_STANDARD 23)
@@ -25,7 +26,7 @@ add_library(kitok SHARED
         csrc/vocabulary.cpp
         csrc/reader.cpp)
 
-target_link_libraries(kitok nlohmann_json)
+target_link_libraries(kitok nlohmann_json spdlog::spdlog)
 
 # Makes sure:
 # - external call to kitok requires #include "kitok/<>" (not part of the lib)
