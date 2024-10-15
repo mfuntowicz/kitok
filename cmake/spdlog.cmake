@@ -14,3 +14,4 @@ fetchcontent_declare(
     URL https://github.com/gabime/spdlog/archive/refs/tags/v1.14.1.tar.gz
 )
 fetchcontent_makeavailable(spdlog)
+set_property(TARGET spdlog PROPERTY POSITION_INDEPENDENT_CODE ON)

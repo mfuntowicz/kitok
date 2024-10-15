@@ -14,6 +14,7 @@ include(cmake/spdlog.cmake)
 # Some properties
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(PROJECT_NAME kitok)
 
 # Some options
