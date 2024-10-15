@@ -2,6 +2,7 @@
 // Created by Morgan Funtowicz on 9/13/2024.
 //
 
+#include <execution>
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
@@ -25,13 +26,15 @@ namespace kitok {
             const auto vocab = model["/vocab"_json_pointer];
 
             SPDLOG_INFO(FMT_STRING("Detected {:d} tokens in the vocab"), vocab.size());
-            auto tokens = std::vector<std::pair<std::string, kitok_token_id_t>>();
-            tokens.reserve(vocab.size());
+            auto tokens = std::vector<std::string>(vocab.size());
+            const auto begin = tokens.cbegin();
+            const auto items = vocab.items();
 
-            for(auto& [token, id] : vocab.items())
-                tokens.emplace_back(std::string(token), id.get<kitok_token_id_t>());
+            std::for_each(std::execution::par_unseq, items.begin(), items.end(), [&tokens](auto item){
+                auto& [token, idx] = item;
+                tokens[idx] = token;
+            });
 
-            std::sort(tokens.begin(), tokens.end());
             return kitok_vocabulary_t{std::move(tokens), std::move(std::vector<kitok_token_flags_t>())};
 
         } else {
